@@ -1,7 +1,7 @@
-#train-server
+# train-server
 A simple wrapper server for the MTA realtime train data API. More info about the API can be found here: [Realtime Data Feeds](https://api.mta.info/#/landing).
 
-###Usage
+### Usage
 Server runs on :8080. Requests can be made to `/api/arrivalTimes` with the following json body:
 ```
 {
