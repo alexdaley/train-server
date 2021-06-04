@@ -6,6 +6,11 @@ import (
 )
 
 func main() {
+	csvResult := loadStationCsv()
+	if csvResult == false {
+		log.Fatal("Could not load station CSV")
+	}
+
 	http.HandleFunc("/api/arrivalTimes", getArrivalTimes)
 
 	err := http.ListenAndServe(":8080", nil)

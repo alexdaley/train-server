@@ -32,6 +32,17 @@ func getArrivalTimes(res http.ResponseWriter, req *http.Request) {
 	station := reqBody.Station
 	count, err := reqBody.Count.Int64()
 
+	stationName := getStationName(station)
+
+	if stationName == "" {
+		log.Println("invalid station name")
+		res.WriteHeader(400)
+		_, _ = res.Write([]byte("invalid station name"))
+		return
+	}
+
+	log.Printf("Request: line=[%s], station=[%s], count=[%d]\n", line, getStationName(station), count)
+
 	if line == "" || station == "" || err != nil {
 		log.Println("required params not provided")
 		res.WriteHeader(400)
