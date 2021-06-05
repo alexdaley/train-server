@@ -11,7 +11,7 @@ func main() {
 		log.Fatal("Could not load station CSV")
 	}
 
-	http.HandleFunc("/api/arrivalTimes", getArrivalTimes)
+	http.HandleFunc("/api/arrivalTimes", CORS(getArrivalTimes))
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

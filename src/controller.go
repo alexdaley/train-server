@@ -8,12 +8,16 @@ import (
 )
 
 type RequestBody struct {
-	Line    string      `json:"line"`
-	Station string      `json:"station"`
-	Count   json.Number `json:"count"`
+	Line     string      `json:"line"`
+	Station  string      `json:"station"`
+	Count    json.Number `json:"count"`
+	TextMode bool        `json:"text_mode"`
 }
 
 func getArrivalTimes(res http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		return
+	}
 	reqBody := RequestBody{}
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
@@ -31,6 +35,7 @@ func getArrivalTimes(res http.ResponseWriter, req *http.Request) {
 	line := reqBody.Line
 	station := reqBody.Station
 	count, err := reqBody.Count.Int64()
+	textMode := reqBody.TextMode
 
 	stationName := getStationName(station)
 
@@ -50,7 +55,7 @@ func getArrivalTimes(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	arrivalTimes := getNextArrivalTimes(line, station, int(count))
+	arrivalTimes := getNextArrivalTimes(line, station, int(count), textMode)
 
 	jsonResponse, err := json.Marshal(&arrivalTimes)
 	if err != nil {
