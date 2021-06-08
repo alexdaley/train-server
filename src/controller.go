@@ -46,7 +46,7 @@ func getArrivalTimes(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printf("Request: line=[%s], station=[%s], count=[%d]\n", line, getStationName(station), count)
+	log.Printf("Request [%s]: line=[%s], station=[%s], count=[%d]\n", getReqId(req), line, getStationName(station), count)
 
 	if line == "" || station == "" || err != nil {
 		log.Println("required params not provided")

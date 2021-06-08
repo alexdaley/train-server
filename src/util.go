@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -23,4 +24,9 @@ func getTimeString(epoch int) string {
 	return fmt.Sprintf("%s (%s)",
 		getMinsFromNowEpoch(epoch),
 		getClockTime(epoch))
+}
+
+func getReqId(r *http.Request) string {
+	val, _ := r.Context().Value("req-id").(string)
+	return val
 }

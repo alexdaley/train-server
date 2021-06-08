@@ -1,6 +1,12 @@
 package main
 
-import "net/http"
+import (
+	"context"
+	"github.com/google/uuid"
+	"log"
+	"net/http"
+	"time"
+)
 
 func CORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -16,4 +22,28 @@ func CORS(next http.HandlerFunc) http.HandlerFunc {
 
 		next(w, r)
 	}
+}
+
+func meterRequest(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now().UnixNano()
+		next(w, r)
+		endTime := time.Now().UnixNano()
+
+		duration := (endTime - startTime) / (time.Millisecond.Nanoseconds() / time.Nanosecond.Nanoseconds())
+		if LogRequestTime {
+			log.Printf("Request [%s] duration: %dms\n", getReqId(r), int(duration))
+		}
+	}
+}
+
+func stamp(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), "req-id", uuid.NewString())
+		next(w, r.WithContext(ctx))
+	}
+}
+
+func wrap(final http.HandlerFunc) http.HandlerFunc {
+	return stamp(CORS(meterRequest(final)))
 }
