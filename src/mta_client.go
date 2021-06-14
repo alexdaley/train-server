@@ -56,11 +56,11 @@ func getStationArrivalTimes(trips []*realtime.TripUpdate, stationId string, coun
 func GetCurrentTrips(line string) []*realtime.TripUpdate {
 	response := getApiResponse(line)
 	feedMessage := parseFeedMessageFromApiResponse(response)
+	trips := make([]*realtime.TripUpdate, 0)
 	if feedMessage == nil {
 		log.Println("No Data Retrieved")
-		return nil // TODO: is this right?
+		return trips
 	}
-	trips := make([]*realtime.TripUpdate, 0)
 
 	for _, entity := range feedMessage.Entity {
 		if entity.GetTripUpdate() != nil && entity.GetTripUpdate().GetTrip().GetRouteId() == line {
